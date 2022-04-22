@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="frame" />
-    <div class="content">
+    <div class="info">
       <img :src="contact.photo" class="photo">
       <div class="name">{{contact.name}}</div>
       <div class="cellphone">
@@ -9,13 +9,18 @@
       </div>
       <div class="email">{{contact.email}}</div>
     </div>
+    <b-button outlined type="is-warning">Edit</b-button>
+    <b-button outlined type="is-danger">Delete</b-button>
   </section>
 </template>
 
 <script>
 export default {
   name: 'ContactCard',
-  props: ['contact']
+  props: ['contact'],
+  methods: {
+    
+  }
 }
 </script>
 
@@ -24,7 +29,7 @@ section{
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
   border-radius: .5rem;
   width: 20rem;
-  height: 15rem;
+  height: fit-content;
   padding-top: .2rem;
   display: block;
 }
@@ -35,8 +40,9 @@ section{
   margin: .1rem;
   display: block;
 }
-.content{
+.info{
   line-height: 1.5rem;
+  margin-bottom: 1rem;
 }
 img{
   display: block;
@@ -52,5 +58,8 @@ img{
 .name{
   font-weight: bold;
 }
-
+.button{
+  margin: .5rem;
+  margin-bottom: 1rem;
+}
 </style>
