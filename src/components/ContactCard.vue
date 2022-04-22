@@ -9,7 +9,7 @@
       </div>
       <div class="email">{{contact.email}}</div>
     </div>
-    <b-button outlined type="is-warning">Edit</b-button>
+    <b-button outlined type="is-warning" tag="router-link" :to="'/edit-contact?id='+contact.id">Edit</b-button>
     <b-button outlined type="is-danger" @click="deleteContact">Delete</b-button>
   </section>
 </template>

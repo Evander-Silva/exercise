@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import ContactPanel from '../views/ContactPanel.vue'
 import AddContact from '../views/AddContact.vue'
+import EditContact from '../views/EditContact.vue'
 
 Vue.use(VueRouter)
 
@@ -17,13 +18,10 @@ const routes = [
     component: AddContact
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    path: '/edit-contact',
+    name: 'edit-contact',
+    component: EditContact
+  },
 ]
 
 const router = new VueRouter({

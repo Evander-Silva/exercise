@@ -29,6 +29,10 @@ export default new Vuex.Store({
     DELETE_CONTACT(state, contact){
       let id = state.contacts.indexOf(contact)
       state.contacts.splice(id, 1)
+    },
+    EDIT_CONTACT(state, contact){
+      let id = state.contacts.find(element => element.id == contact.id).id
+      state.contacts.splice(id, 1, contact)
     }
   },
   actions: {
@@ -38,6 +42,9 @@ export default new Vuex.Store({
     },
     deleteContact({ commit }, contact){
       commit("DELETE_CONTACT", contact);
+    },
+    editContact({ commit }, contact){
+      commit("EDIT_CONTACT", contact);
     }
   }
 })
