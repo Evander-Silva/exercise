@@ -70,7 +70,4 @@ img {
   margin-right: auto;
   margin-top: -3rem;
 }
-.button{
-
-}
 </style>

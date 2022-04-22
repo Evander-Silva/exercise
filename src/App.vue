@@ -1,13 +1,17 @@
 <template>
   <div id="app">
-    <div> 
-      <h1>Contact Manager</h1>
+    <div>
+      <span class="title">Contact Manager</span>
     </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <style>
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

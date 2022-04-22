@@ -28,8 +28,8 @@
     >
       <b-input v-model="contact.cellphone" placeholder="Contact" />
     </b-field>
-    <b-field :label="contact.email ? 'E-mail' : ''" label-position="on-border">
-      <b-input v-model="contact.email" placeholder="E-mail" />
+    <b-field :label="contact.email ? 'Email' : ''" label-position="on-border">
+      <b-input v-model="contact.email" placeholder="Email" type="email" />
     </b-field>
     <b-button v-if="!editForm" type="is-success" outlined @click="addContact"
       >Add contact</b-button
@@ -40,6 +40,22 @@
     <b-button type="is-danger" outlined tag="router-link" to="/"
       >Cancel</b-button
     >
+    <b-notification
+      type="is-danger is-light"
+      role="alert"
+      v-if="pendencies.length > 0"
+    >
+      <span
+        ><b
+          >To perform the operation, the following requirements need to be
+          met:</b
+        ></span
+      >
+      <br />
+      <ul>
+        <li v-for="(pendencie, i) in pendencies" :key="i">- {{ pendencie }}</li>
+      </ul>
+    </b-notification>
   </section>
 </template>
 
@@ -59,6 +75,7 @@ export default {
       previewImage: null,
       file: null,
       editForm: false,
+      pendencies: [],
     };
   },
   methods: {
@@ -75,28 +92,44 @@ export default {
       }
     },
     addContact() {
-      this.uploadPhoto();
-      this.$store.dispatch("addContact", this.contact).then(() => {
-        this.$buefy.dialog.alert({
-          title: "Contact Added",
-          message: "The contact was successfully added",
-          onConfirm: () => {
-            this.$router.push("/");
-          },
-        });
-      });
+      if (this.validateEntries()) {
+        if (!this.areThereDuplicates()) {
+          this.uploadPhoto();
+          this.$store.dispatch("addContact", this.contact).then(() => {
+            this.$buefy.dialog.alert({
+              title: "Contact Added",
+              message: "The contact was successfully added",
+              onConfirm: () => {
+                this.$router.push("/");
+              },
+            });
+          });
+        } else {
+          this.$buefy.dialog.alert(
+            "There is already a contact with this phone and/or email."
+          );
+        }
+      }
     },
     contactEdit() {
-      this.uploadPhoto();
-      this.$store.dispatch("editContact", this.contact).then(() => {
-        this.$buefy.dialog.alert({
-          title: "Saved Changes",
-          message: "Changes have been saved successfully",
-          onConfirm: () => {
-            this.$router.push("/");
-          },
-        });
-      });
+      if (this.validateEntries()) {
+        if (!this.areThereDuplicates()) {
+          this.uploadPhoto();
+          this.$store.dispatch("editContact", this.contact).then(() => {
+            this.$buefy.dialog.alert({
+              title: "Saved Changes",
+              message: "Changes have been saved successfully",
+              onConfirm: () => {
+                this.$router.push("/");
+              },
+            });
+          });
+        } else {
+          this.$buefy.dialog.alert(
+            "There is already a contact with this phone and/or email."
+          );
+        }
+      }
     },
     uploadPhoto() {
       if (this.file != null) {
@@ -112,6 +145,78 @@ export default {
         (element) => element.id == id
       );
       this.previewImage = this.contact.photo;
+    },
+    validateEntries() {
+      this.pendencies = [];
+      if (this.contact.name.length < 5) {
+        this.pendencies.push("The name must be at least 5 characters long");
+      }
+      if (this.contact.cellphone.length != 9) {
+        this.pendencies.push("Contact must be 9 digits");
+      }
+      if (!this.validateEmail()) {
+        this.pendencies.push("Enter a valid email");
+      }
+      if (this.file == null) {
+        if (!this.editForm) {
+          this.pendencies.push("Insert a photo");
+        }
+      }
+      if (this.pendencies.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    validateEmail() {
+      let user = this.contact.email.substring(
+        0,
+        this.contact.email.indexOf("@")
+      );
+      let domain = this.contact.email.substring(
+        this.contact.email.indexOf("@") + 1,
+        this.contact.email.length
+      );
+
+      if (
+        user.length >= 1 &&
+        domain.length >= 3 &&
+        user.search("@") == -1 &&
+        domain.search("@") == -1 &&
+        user.search(" ") == -1 &&
+        domain.search(" ") == -1 &&
+        domain.search(".") != -1 &&
+        domain.indexOf(".") >= 1 &&
+        domain.lastIndexOf(".") < domain.length - 1
+      ) {
+        return true;
+      } else return false;
+    },
+    areThereDuplicates() {
+      let duplicateContact = this.$store.state.contacts.find(
+        (element) => element.cellphone == this.contact.cellphone
+      );
+      let duplicateEmail = this.$store.state.contacts.find(
+        (element) => element.email == this.contact.email
+      );
+
+      if ((duplicateContact || duplicateEmail) != undefined) {
+        console.log("Existe duplicata");
+        if (this.editForm) {
+          console.log("Isso é uma edição");
+          if (duplicateContact.id == this.contact.id) {
+            if (duplicateEmail.id == this.contact.id) {
+              return false;
+            } else {
+              return true;
+            }
+          } else {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      }
     },
   },
   mounted() {
