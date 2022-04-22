@@ -75,11 +75,6 @@ export default {
       }
     },
     addContact() {
-      // let reader = new FileReader();
-      // reader.readAsDataURL(this.file);
-      // reader.onloadend = () => {
-      //   this.contact.photo = reader.result;
-      // }
       this.uploadPhoto();
       this.$store.dispatch("addContact", this.contact).then(() => {
         this.$buefy.dialog.alert({
