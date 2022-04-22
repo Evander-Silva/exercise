@@ -10,7 +10,7 @@
       <div class="email">{{contact.email}}</div>
     </div>
     <b-button outlined type="is-warning">Edit</b-button>
-    <b-button outlined type="is-danger">Delete</b-button>
+    <b-button outlined type="is-danger" @click="deleteContact">Delete</b-button>
   </section>
 </template>
 
@@ -19,7 +19,22 @@ export default {
   name: 'ContactCard',
   props: ['contact'],
   methods: {
-    
+    deleteContact(){
+      this.$buefy.dialog.confirm({
+        title: 'Delete '+this.contact.name+"?",
+        message: 'Do you want to delete this contact?',
+        confirmText: 'Delete contact',
+        type: 'is-danger',
+        onConfirm: () => {
+          this.$store.dispatch('deleteContact', this.contact).then(() => {
+            this.$buefy.toast.open({
+              message: 'Contact successfully deleted',
+              type: 'is-success'
+            })
+          })
+        }
+      })
+    }
   }
 }
 </script>

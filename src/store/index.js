@@ -26,7 +26,8 @@ export default new Vuex.Store({
     NEW_CONTACT(state, contact){
       state.contacts.push(contact)
     },
-    DELETE_CONTACT(state, id){
+    DELETE_CONTACT(state, contact){
+      let id = state.contacts.indexOf(contact)
       state.contacts.splice(id, 1)
     }
   },
@@ -35,8 +36,8 @@ export default new Vuex.Store({
       contact.id = Math.random();
       commit("NEW_CONTACT", contact);
     },
-    deleteContact({ commit }, id){
-      commit("DELETE_CONTACT", id);
+    deleteContact({ commit }, contact){
+      commit("DELETE_CONTACT", contact);
     }
   }
 })
